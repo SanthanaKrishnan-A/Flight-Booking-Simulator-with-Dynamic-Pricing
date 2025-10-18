@@ -54,8 +54,7 @@ CREATE TABLE Passengers (
     passenger_id INT AUTO_INCREMENT PRIMARY KEY,
     full_name VARCHAR(100) NOT NULL,
     email VARCHAR(50) NOT NULL UNIQUE,
-    phone VARCHAR(13) CHECK(CHAR_LENGTH(phone) = 10),
-    password_hash VARCHAR(255) NULL
+    phone VARCHAR(13) CHECK(CHAR_LENGTH(phone) = 10)
 );
 
 -- ============================================================
