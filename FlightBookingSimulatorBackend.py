@@ -94,7 +94,6 @@ class Passenger(Base):
     full_name = mapped_column("full_name", String(100))
     email = mapped_column("email", String(50))
     phone = mapped_column("phone", String(13))
-    password_hash = mapped_column("password_hash", String(255), nullable=True)  # added via migration
     bookings = relationship("Booking", back_populates="passenger", lazy="selectin")
 
 
@@ -126,8 +125,24 @@ async def lifespan(app: FastAPI):
     # Shutdown code (optional)
     print("Application shutdown")
 
-app = FastAPI(title="Flight Booking Simulator with Dynamic Pricing", lifespan=lifespan)
+from fastapi.middleware.cors import CORSMiddleware
 
+app = FastAPI(title="Flight Booking Simulator with Dynamic Pricing",lifespan= lifespan)
+
+
+origins = [
+    "http://localhost:5500",
+    "http://127.0.0.1:5500"
+]
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins = origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
 
 # DB dependency
 def get_db():
@@ -528,7 +543,6 @@ class RoundtripCreateReq(BaseModel):
     return_seat_number: Optional[str] = None
     passenger_id: int
 
-# ...existing code...
 @app.post("/bookings/roundtrip", response_model=List[BookingResponse], status_code=status.HTTP_201_CREATED)
 def create_roundtrip(req: RoundtripCreateReq, db: Session = Depends(get_db)):
     """
@@ -725,7 +739,40 @@ def pay_booking(booking_id: int, payload: BookingPayReq, db: Session = Depends(g
         db.rollback()
         raise HTTPException(status_code=500, detail=f"Payment processing failed: {e}")
 
+@app.get("/bookings/passenger/{passenger_id}")
+def get_my_bookings(passenger_id: int, db: Session = Depends(get_db)):
+    bookings = db.query(Booking).filter(Booking.passenger_id == passenger_id,
+                                        Booking.status != "Cancelled").all()
+    out = []
+    for b in bookings:
+        flight_number = db.query(Flight.flight_number).filter(Flight.flight_id == b.flight_id).scalar()
+        seat_number = db.query(Seat.seat_number).filter(Seat.seat_id == b.seat_id).scalar()
+        passenger_name = db.query(Passenger.full_name).filter(Passenger.passenger_id == b.passenger_id).scalar()
+        out.append(BookingResponse(
+            booking_id=b.booking_id,
+            pnr=b.pnr,
+            flight_number=flight_number or "",
+            passenger_name=passenger_name or "",
+            seat_number=seat_number or "",
+            amount_paid=float(b.amount_paid),
+            status=b.status,
+            booking_date=b.booking_date or datetime.utcnow()
+        ))
+    return out
 
+@app.post("/bookings/cancel/{booking_id}")
+def cancel_booking(booking_id: int, db: Session = Depends(get_db)):
+    booking = db.query(Booking).filter(Booking.booking_id == booking_id,
+                                       Booking.status != "Cancelled").first()
+    if not booking:
+        raise HTTPException(status_code=404, detail="Booking not found")
+    
+    if booking.status == "Cancelled":
+        return {"message":f"Booking {booking_id} already cancelled"}
+    
+    booking.status = "Cancelled"
+    db.commit()
+    return {"message": f"Booking {booking_id} cancelled successfully"}
 
 @app.get("/bookings/{identifier}", response_model=BookingResponse)
 def get_booking(identifier: str, passenger_id: Optional[int] = Query(None, description="Optional passenger id to check ownership"), db: Session = Depends(get_db)):
@@ -765,7 +812,8 @@ def my_bookings(passenger_id: int = Query(..., description="ID of the passenger"
     """
     Get all bookings for a given passenger.
     """
-    rows = db.query(Booking).filter(Booking.passenger_id == passenger_id).all()
+    rows = db.query(Booking).filter(Booking.passenger_id == passenger_id,
+                    Booking.status != "Cancelled").all()
     out = []
     for b in rows:
         flight_number = db.query(Flight.flight_number).filter(Flight.flight_id == b.flight_id).scalar()
@@ -835,3 +883,4 @@ def debug_recent_bookings(limit: int = 20, db: Session = Depends(get_db)):
         "pnr": r.pnr,
         "booking_date": r.booking_date
     } for r in rows]
+
