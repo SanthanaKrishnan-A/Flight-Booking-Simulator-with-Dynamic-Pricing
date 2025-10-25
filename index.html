@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flight Booking Simulator</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h2>Flight Booking Simulator</h2>
+  <p class="tagline"style="font-family: 'Arial', sans-serif; font-size: 1.2em; ">
+    Takes your flying experience to next level
+</p>
+
+</header>
+
+<main>
+  <!-- 🔍 Search Section -->
+  <section id="search-section">
+    <h2>Search Flights</h2>
+    <form id="search-form">
+      <input type="text" id="from-city" placeholder="From" required>
+      <input type="text" id="to-city" placeholder="To" required>
+      <input type="date" id="date">
+      <button type="submit">Search</button>
+    </form>
+  </section>
+
+  <!-- ✈️ Flights Section -->
+  <section id="flights-section">
+    <h2>Available Flights</h2>
+    <div id="flights-list"></div>
+  </section>
+
+  <!-- 🧾 Booking Section -->
+  <section id="booking-section" class="hidden">
+    <h2>Book Flight</h2>
+    <div id="booking-details"></div>
+    <form id="booking-form">
+      <input type="text" id="passenger-id" placeholder="Passenger ID" required>
+      <input type="text" id="seat-number" placeholder="Seat (optional)">
+      <button type="submit">Book & Pay</button>
+    </form>
+  </section>
+
+  <!-- ✅ Confirmation -->
+  <section id="confirmation-section" class="hidden">
+    <h2>Booking Confirmation</h2>
+    <div id="confirmation-details"></div>
+  </section>
+
+  <!-- 👤 My Bookings -->
+  <section id="mybookings-section">
+    <h2>My Bookings</h2>
+    <form id="mybookings-form">
+      <input type="text" id="my-passenger-id" placeholder="Passenger ID" required>
+      <button type="submit">View My Bookings</button>
+    </form>
+    <div id="mybookings-list"></div>
+  </section>
+</main>
+
+<footer>
+  &copy; 2025 Flight Booking Simulator
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
