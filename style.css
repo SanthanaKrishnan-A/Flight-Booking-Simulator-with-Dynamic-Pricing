@@ -1,31 +1,74 @@
 html {
-  scroll-behavior:auto;
+  scroll-behavior: smooth;
 }
 /* ========== GENERAL STYLES ========== */
+
 body {
-  font-family: "Segoe UI", sans-serif;
-  background: #f7f9fb;
-  color: #222;
+  font-family: 'Poppins', sans-serif;
+  background:linear-gradient(to right, #0078d7, #00c6ff);  
+  color: white;
   margin: 0;
   padding: 0;
 }
 
 header {
-  border: 1px solid pink;
-  border-radius:5 px;
-  color: #d62020ff;
-  text-align: center;
-  padding: 10px;
-  font-size: 1.6rem;
-  background: linear-gradient(90deg, #b60067ff, #00b4d8);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding: 10px 20px;
+  background-color: #ffffff;
+  box-bottom: 2px solid #0078d7
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
+
+.header-text {
+  flex: 1;
+  text-align: center;
+}
+
+header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #0078d7
+}
+
+#home-btn {
+  padding: 8px 14px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+#home-btn:hover {
+  background-color: #0056b3;
+}
+
 .tagline {
   font-size: 1rem;
   margin-top: 0.3rem;
   color: #280049ff;
   font-style: italic;
+  text-align: center;
 }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.tagline {
+  animation: fadeIn 1s ease-out forwards;
+}
+
+
 
 /* --- NAVBAR --- */
 .navbar {
@@ -65,7 +108,7 @@ header {
 }
 
 /* --- Responsive --- */
-@media (max-width: 700px) {
+@media (max-width: 600px) {
   .navbar ul {
     flex-direction: column;
     gap: 0.8rem;
@@ -73,6 +116,12 @@ header {
   }
   .navbar a {
     font-size: 0.95rem;
+  }
+  h2{
+    font-size: 1.3rem
+  }
+  .flight-crad{
+    font-size: 0.9rem;
   }
 }
 main {
@@ -120,52 +169,42 @@ h2 {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 1rem;
+  color: #222;
 }
 
 /* Compact Flight Card */
 .flight-card {
-  background: #E6E6FA;
-  border: 1px solid #e5e5e5;
-  border-radius: 10px;
-  padding: 0.8rem 1rem;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
+  background: linear-gradient(to bottom right, #e3f2fd, #fce4ec);
+  color: #222; /* Ensure dark text for readability */
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  margin: 12px 0;
   transition: transform 0.2s ease;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .flight-card:hover {
-  transform: translateY(-3px);
-}
-
-.flight-card h3 {
-  margin: 0;
-  font-size: 1.05rem;
-  color: #0078d7;
+  transform: scale(1.02);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
 }
 
 .flight-card p {
-  margin: 0;
-  font-size: 0.9rem;
-  color: #555;
+  margin: 0.5rem 0;
+  font-size: 0.95rem;
+  line-height: 1.4;
 }
 
-.flight-card button {
-  align-self: flex-start;
-  margin-top: 0.5rem;
-  background: #0078d7;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  padding: 0.4rem 0.8rem;
-  cursor: pointer;
-  transition: background 0.2s ease;
+.flight-card strong {
+  color: #0078d7; /* Highlight airline name or flight number */
 }
 
-.flight-card button:hover {
-  background: #005fa3;
+.book-btn:hover {
+  background-color: #218838;
 }
+
 
 /* ========== BOOKING SECTION ========== */
 #booking-section form,
@@ -174,6 +213,7 @@ h2 {
   flex-wrap: wrap;
   gap: 0.5rem;
   margin-top: 1rem;
+  color:#222;
 }
 
 #booking-section input,
@@ -203,6 +243,7 @@ h2 {
 /* ========== MY BOOKINGS LIST ========== */
 #mybookings-list {
   margin-top: 1rem;
+  color: #222;
 }
 
 .booking-card {
@@ -212,8 +253,35 @@ h2 {
   padding: 0.8rem 1rem;
   margin-bottom: 0.8rem;
   box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  color: #222;
+}
+#flights-bookings-wrapper {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+  color: #222;
 }
 
+#flights-section,
+#mybookings-section {
+  flex: 1 1 45%;
+  background: #ffffff;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  scroll-margin-top: 80px;
+}
+
+#mybookings-section form {
+  margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+  #flights-bookings-wrapper {
+    grid-template-columns: 1fr  ;
+  }
+}
 /* ========== CONFIRMATION SECTION ========== */
 #confirmation-section {
   margin-top: 1.5rem;

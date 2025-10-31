@@ -5,15 +5,28 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Flight Booking Simulator</title>
 <link rel="stylesheet" href="style.css">
+<link rel="icon" href="/favicon.png" type="image">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-<header>
-  <h2>Flight Booking Simulator</h2>
-  <p class="tagline"style="font-family: 'Arial', sans-serif; font-size: 1.2em; ">
-    Takes your flying experience to next level
-</p>
+  <nav class="navbar">
+  <ul>
+    <li><a href="#search-section">Search Flights</a></li>
+    <li><a href="#flights-section">Available Flights</a></li>
+    <li><a href="#mybookings-section">My Bookings</a></li>
+  </ul>
+  </nav>
 
+<header>
+  <div class="header-top">
+    <button id="home-btn">🏠 Home</button>
+    <h2>Flight Booking Simulator</h2>
+  <p class="tagline">
+    Takes your flying experience to next level
+  </p>
+  </div>
 </header>
+
 
 <main>
   <!-- 🔍 Search Section -->
@@ -22,6 +35,13 @@
     <form id="search-form">
       <input type="text" id="from-city" placeholder="From" required>
       <input type="text" id="to-city" placeholder="To" required>
+      <datalist id="cities">
+        <option value="Delhi">
+        <option value="Mumbai">
+        <option value="Chennai">
+        <option value="Bangalore">
+        <option value="Kolkata">
+      </datalist>
       <input type="date" id="date">
       <button type="submit">Search</button>
     </form>
@@ -31,6 +51,7 @@
   <section id="flights-section">
     <h2>Available Flights</h2>
     <div id="flights-list"></div>
+    
   </section>
 
   <!-- 🧾 Booking Section -->
@@ -39,7 +60,7 @@
     <div id="booking-details"></div>
     <form id="booking-form">
       <input type="text" id="passenger-id" placeholder="Passenger ID" required>
-      <input type="text" id="seat-number" placeholder="Seat (optional)">
+      <input type="text" id="seat-number" placeholder="Seat">
       <button type="submit">Book & Pay</button>
     </form>
   </section>
@@ -51,14 +72,15 @@
   </section>
 
   <!-- 👤 My Bookings -->
-  <section id="mybookings-section">
-    <h2>My Bookings</h2>
-    <form id="mybookings-form">
-      <input type="text" id="my-passenger-id" placeholder="Passenger ID" required>
-      <button type="submit">View My Bookings</button>
-    </form>
-    <div id="mybookings-list"></div>
-  </section>
+    <section id="mybookings-section">
+      <h2>My Bookings</h2>
+      <form id="mybookings-form">
+        <input type="text" id="my-passenger-id" placeholder="Passenger ID" required>
+        <button type="submit">View My Bookings</button>
+      </form>
+    <section id="mybookings-list"></div>
+  </div>
+  
 </main>
 
 <footer>

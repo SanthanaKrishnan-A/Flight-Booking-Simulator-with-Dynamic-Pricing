@@ -17,12 +17,21 @@ function scrollToSection(id){
 }
 let selectedFlight = null;
 
+document.getElementById("home-btn").addEventListener("click", () => {
+    window.location.href = "index.html"; // or "/" if hosted at root
+});
+
 
 
 // ------------------ Display Flights ------------------
 function displayFlights(flights) {
-    if (!flights.length) {
-        flightsList.innerHTML = "<p>No flights found</p>";
+     if (!Array.isArray(flights) || flights.length === 0) {
+        flightsList.innerHTML = `
+            <div class="no-flights">
+                <p>😕 No flights found for your search.</p>
+                <p>Try different cities or dates.</p>
+            </div>
+        `;
         return;
     }
     flightsList.innerHTML = "";
@@ -34,7 +43,7 @@ function displayFlights(flights) {
                 <p><strong>${f.airline}</strong> | Flight: ${f.flight_number}</p>
                 <p>${f.origin} → ${f.destination}</p>
                 <p>Departure: ${new Date(f.departure_time).toLocaleString()}</p>
-                <p>Price: $${f.dynamic_price}</p>
+                <p>Price: ₹${f.dynamic_price.toLocaleString("en-IN")}</p>
                 <p>Seats available: ${f.seats_available}</p>
             </div>
             <button class="book-btn">Book</button>
@@ -62,8 +71,8 @@ searchForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     flightsList.innerHTML = "<p>Loading flights...</p>";
 
-    const from = document.getElementById("from").value;
-    const to = document.getElementById("to").value;
+    const from = document.getElementById("from-city").value;
+    const to = document.getElementById("to-city").value;
     const date = document.getElementById("date").value;
 
     let url = `${API_BASE}/flights?from=${from}&to=${to}`;
@@ -87,7 +96,7 @@ function selectFlight(flight) {
         <p><strong>${flight.airline}</strong> | Flight: ${flight.flight_number}</p>
         <p>${flight.origin} → ${flight.destination}</p>
         <p>Departure: ${new Date(flight.departure_time).toLocaleString()}</p>
-        <p>Price: $${flight.dynamic_price}</p>
+        <p>Price: ₹${flight.dynamic_price.toLocaleString("en-IN")}</p>
         <p>Seats available: ${flight.seats_available}</p>
     `;
     confirmationSection.classList.add("hidden");
@@ -110,6 +119,12 @@ bookingForm.addEventListener("submit", async (e) => {
                 passenger_id: parseInt(passengerId)
             })
         });
+        if (!res.ok) {
+        const error = await res.json();
+        console.error("Booking creation failed:", error);
+        alert(error.detail || "Booking creation failed");
+        return; // Stop here — don't go to payment
+}
         const booking = await res.json();
 
         const payRes = await fetch(`${API_BASE}/bookings/pay/${booking.booking_id}`, {
@@ -135,7 +150,7 @@ function displayConfirmation(booking) {
         <p>Flight: ${booking.flight_number}</p>
         <p>Passenger: ${booking.passenger_name}</p>
         <p>Seat: ${booking.seat_number}</p>
-        <p>Amount Paid: $${booking.amount_paid}</p>
+        <p>Amount Paid: ₹${booking.amount_paid.toLocaleString("en-IN")}</p>
         <p>Status: ${booking.status}</p>
     `;
 }
